@@ -1,0 +1,17 @@
+/.idea
+**/.DS_Store
+
+# EX00
+/ex00/objs/*.o
+/ex00/btc
+/ex00/export.txt
+
+# EX01
+/ex01/objs/*.o
+/ex01/ex01
+/ex01/export.txt
+
+# EX02
+/ex02/objs/*.o
+/ex02/ex02
+/ex02/export.txt
