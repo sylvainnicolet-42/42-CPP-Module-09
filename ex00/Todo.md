@@ -3,8 +3,8 @@
 - [x] Store db_filename in a map container
 - [x] Create a function getExchangeRateWithDate
   - [ ] Return float instead of string
-- [ ] Check validity of date (Year-Month-Day)
-- [ ] Check validity of value (float between 0 and 1000)
+- [x] Check validity of date (Year-Month-Day)
+- [x] Check validity of value (float between 0 and 1000)
 - [ ] Create function to display the result for each line
 
 ## Results

@@ -8,15 +8,16 @@
 
 class BitcoinExchange {
 	public:
-		BitcoinExchange(std::string database_filename); // constructor
+		BitcoinExchange(const std::string& database_filename); // constructor
 		~BitcoinExchange(); // destructor
+		BitcoinExchange(BitcoinExchange const &src); // copy constructor
+		BitcoinExchange &operator=(BitcoinExchange const &rhs); // assignment operator
 
 		void	showDatabase() const;
-		void	getExchangeRateWithDate(const std::string& date) const;
+		void	displayFromFile(const std::string& filename) const;
 	private:
 		BitcoinExchange(); // default constructor
-		BitcoinExchange(BitcoinExchange const &src);
-		BitcoinExchange &operator=(BitcoinExchange const &rhs);
+		float	getExchangeRateWithDate(const std::string& date) const;
 
 		std::map<std::string, float> _database;
 };
