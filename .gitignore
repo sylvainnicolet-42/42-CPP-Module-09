@@ -8,7 +8,7 @@
 
 # EX01
 /ex01/objs/*.o
-/ex01/ex01
+/ex01/RPN
 /ex01/export.txt
 
 # EX02
