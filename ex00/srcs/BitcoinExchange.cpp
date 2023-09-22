@@ -137,9 +137,83 @@ static bool isDateValid(const std::string& date) {
 		std::cout << "Error: Day is not a number";
 		return false;
 	}
-	if (std::stoi(day) < 1 || std::stoi(day) > 31) {
-		std::cout << "Error: Day must be between 1 and 31";
-		return false;
+
+	switch (std::stoi(month)) {
+		case 1:
+			if (std::stoi(day) < 1 || std::stoi(day) > 31) {
+				std::cout << "Error: Day must be between 1 and 31";
+				return false;
+			}
+			break;
+		case 2:
+			if (std::stoi(day) < 1 || std::stoi(day) > 28) {
+				std::cout << "Error: Day must be between 1 and 28";
+				return false;
+			}
+			break;
+		case 3:
+			if (std::stoi(day) < 1 || std::stoi(day) > 31) {
+				std::cout << "Error: Day must be between 1 and 31";
+				return false;
+			}
+			break;
+		case 4:
+			if (std::stoi(day) < 1 || std::stoi(day) > 30) {
+				std::cout << "Error: Day must be between 1 and 30";
+				return false;
+			}
+			break;
+		case 5:
+			if (std::stoi(day) < 1 || std::stoi(day) > 31) {
+				std::cout << "Error: Day must be between 1 and 31";
+				return false;
+			}
+			break;
+		case 6:
+			if (std::stoi(day) < 1 || std::stoi(day) > 30) {
+				std::cout << "Error: Day must be between 1 and 30";
+				return false;
+			}
+			break;
+		case 7:
+			if (std::stoi(day) < 1 || std::stoi(day) > 31) {
+				std::cout << "Error: Day must be between 1 and 31";
+				return false;
+			}
+			break;
+		case 8:
+			if (std::stoi(day) < 1 || std::stoi(day) > 31) {
+				std::cout << "Error: Day must be between 1 and 31";
+				return false;
+			}
+			break;
+		case 9:
+			if (std::stoi(day) < 1 || std::stoi(day) > 30) {
+				std::cout << "Error: Day must be between 1 and 30";
+				return false;
+			}
+			break;
+		case 10:
+			if (std::stoi(day) < 1 || std::stoi(day) > 31) {
+				std::cout << "Error: Day must be between 1 and 31";
+				return false;
+			}
+			break;
+		case 11:
+			if (std::stoi(day) < 1 || std::stoi(day) > 30) {
+				std::cout << "Error: Day must be between 1 and 30";
+				return false;
+			}
+			break;
+		case 12:
+			if (std::stoi(day) < 1 || std::stoi(day) > 31) {
+				std::cout << "Error: Day must be between 1 and 31";
+				return false;
+			}
+			break;
+		default:
+			std::cout << "Error: Month is not valid";
+			return false;
 	}
 
 	return true;
