@@ -171,7 +171,16 @@ bool PmergeMe::isValid(char **argv, bool checkDuplicate) {
 		}
 
 		// Must be positive
-		int n = atoi(argv[i]);
+		std::stringstream	ss(argv[i]);
+		int					n;
+
+		ss.clear();
+		ss >> n;
+		if (ss.fail()) {
+			std::cout << "Error: MAX_INT overflow" << std::endl;
+			return false;
+		}
+		ss.clear();
 		if(n <= 0) {
 			std::cout << "Error: invalid input" << std::endl;
 			return false;

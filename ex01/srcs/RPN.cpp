@@ -29,6 +29,8 @@ RPN &RPN::operator=(RPN const &rhs) {
 void	RPN::run() const {
 	if (this->_stack.size() == 1)
 		std::cout << this->_stack.top() << std::endl;
+	if (this->_stack.size() > 1)
+		std::cout << "Error: too many numbers" << std::endl;
 }
 
 void	RPN::addToStack(const std::string& str) {
