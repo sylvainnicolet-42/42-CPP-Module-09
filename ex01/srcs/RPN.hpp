@@ -11,7 +11,7 @@ class RPN
 		RPN(const std::string& str); // constructor
 		~RPN(); // destructor
 		RPN(RPN const &src); // copy constructor
-		RPN &operator=(RPN const &src); // copy assignment operator
+		RPN &operator=(RPN const &rhs); // copy assignment operator
 
 		void run() const;
 	private:

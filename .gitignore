@@ -13,5 +13,5 @@
 
 # EX02
 /ex02/objs/*.o
-/ex02/ex02
+/ex02/PmergeMe
 /ex02/export.txt
