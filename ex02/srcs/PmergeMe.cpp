@@ -57,10 +57,15 @@ void	PmergeMe::sortVector() {
 /* UTILS FUNCTIONS */
 
 static std::list<int> merge(std::list<int> A, std::list<int> B) {
+
+	// Crée une liste vide pour stocker la fusion des sous-tableaux
 	std::list<int> merged;
+
+	// Initialise deux itérateurs pour parcourir les listes A et B respectivement
 	std::list<int>::iterator itA = A.begin();
 	std::list<int>::iterator itB = B.begin();
 
+	// Parcours les deux sous-tableaux A et B
 	while (itA != A.end() && itB != B.end()) {
 		if (*itA < *itB) {
 			merged.push_back(*itA);
@@ -76,7 +81,6 @@ static std::list<int> merge(std::list<int> A, std::list<int> B) {
 		merged.push_back(*itA);
 		itA++;
 	}
-
 	while (itB != B.end()) {
 		merged.push_back(*itB);
 		itB++;
@@ -86,9 +90,16 @@ static std::list<int> merge(std::list<int> A, std::list<int> B) {
 }
 
 static std::vector<int> merge(std::vector<int> A, std::vector<int> B) {
+
+	std::cout << "merge" << std::endl;
+
+	// Crée un vecteur vide pour stocker la fusion des sous-tableaux
 	std::vector<int> merged;
+
+	// Initialise deux indices i et j pour parcourir les tableaux A et B respectivement
 	size_t i = 0, j = 0;
 
+	// Parcours les deux sous-tableaux A et B
 	while (i < A.size() && j < B.size()) {
 		if (A[i] < B[j]) {
 			merged.push_back(A[i]);
@@ -104,7 +115,6 @@ static std::vector<int> merge(std::vector<int> A, std::vector<int> B) {
 		merged.push_back(A[i]);
 		i++;
 	}
-
 	while (j < B.size()) {
 		merged.push_back(B[j]);
 		j++;
@@ -141,6 +151,8 @@ std::list<int>	fordJohnson(std::list<int> arr) {
 }
 
 std::vector<int> fordJohnson(std::vector<int> arr) {
+
+	// Condition d'arrêt
 	if (arr.size() <= 1) {
 		return arr;
 	}
@@ -148,7 +160,7 @@ std::vector<int> fordJohnson(std::vector<int> arr) {
 	// Divisez le tableau en deux sous-tableaux
 	int middle = arr.size() / 2;
 	std::vector<int> left(arr.begin(), arr.begin() + middle);
-	std::vector<int> right(arr.begin() + middle, arr.end());
+	std::vector<int> right(arr.begin() + middle + 1, arr.end());
 
 	// Triez récursivement les sous-tableaux
 	left = fordJohnson(left);
