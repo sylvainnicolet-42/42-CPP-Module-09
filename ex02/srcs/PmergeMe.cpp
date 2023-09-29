@@ -30,7 +30,7 @@ void PmergeMe::printVector(const std::string& title) const {
 	std::cout << std::endl;
 }
 
-static int binarySearch(std::vector<int> vector, int right, int element) {
+static int binarySearchVector(std::vector<int> vector, int right, int element) {
 	int left = 0;
 	int middle;
 
@@ -136,14 +136,14 @@ void	PmergeMe::sortVector() {
 
 		// Insert second element at correct index using binary search
 		int right = sortedVector.size() - 1;
-		int index = binarySearch(sortedVector, right, it->_second);
+		int index = binarySearchVector(sortedVector, right, it->_second);
 		sortedVector.insert(sortedVector.begin() + index, it->_second);
 	}
 
 	// Insert leaved element using binary search
 	if (leavedElement) {
 		int right = sortedVector.size() - 1;
-		int index = binarySearch(sortedVector, right, leavedElement);
+		int index = binarySearchVector(sortedVector, right, leavedElement);
 		sortedVector.insert(sortedVector.begin() + index, leavedElement);
 	}
 
@@ -157,6 +157,98 @@ void	PmergeMe::sortVector() {
 	}
 
 	_vector = sortedVector;
+}
+
+// -------------------- DEQUE -------------------- //
+
+void	PmergeMe::createDeque(char **argv) {
+	for (int i = 1; argv[i]; i++)
+		_deque.push_back(atoi(argv[i]));
+}
+
+void PmergeMe::printDeque(const std::string& title) const {
+	std::cout << title << ": ";
+	for (std::deque<int>::const_iterator it = _deque.begin(); it != _deque.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+}
+
+static int binarySearchDeque(std::deque<int> deque, int right, int element) {
+	int left = 0;
+	int middle;
+
+	while (left <= right) {
+		middle = (left + right) / 2;
+		if (element < deque[middle])
+			right = middle - 1;
+		else if (element > deque[middle])
+			left = middle + 1;
+		else
+			return middle;
+	}
+	return left;
+}
+
+void	PmergeMe::sortDeque() {
+	std::deque<Pair> pairs;
+	int leavedElement = 0;
+
+	// 1. Group the elements of X into [n/2] pairs of elements, arbitrarily, leaving one element unpaired if there is an odd number of elements.
+	for (std::deque<int>::iterator it = _deque.begin(); it != _deque.end(); it += 2) {
+		if (it + 1 == _deque.end()) {
+			leavedElement = *it;
+			break;
+		}
+		pairs.push_back(Pair(*it, *(it + 1)));
+	}
+
+	// 2. Perform [n/2] comparisons, one per pair, to determine the larger of the two elements in each pair.
+	for (std::deque<Pair>::iterator it = pairs.begin(); it != pairs.end(); it++) {
+		if (it->_first < it->_second)
+			std::swap(it->_first, it->_second);
+	}
+
+	// 3. Sort pairs by first element keeping pairs together
+	std::deque<Pair> sortedPairs;
+	for (std::deque<Pair>::iterator it = pairs.begin(); it != pairs.end(); it++) {
+		if (sortedPairs.empty()) {
+			sortedPairs.push_back(*it);
+			continue;
+		}
+		for (std::deque<Pair>::iterator it2 = sortedPairs.begin(); it2 != sortedPairs.end(); it2++) {
+			if (it->_first < it2->_first) {
+				sortedPairs.insert(it2, *it);
+				break;
+			}
+			if (it2 + 1 == sortedPairs.end()) {
+				sortedPairs.push_back(*it);
+				break;
+			}
+		}
+	}
+
+	// 4. Insert elements into sorted deque using binary search
+	std::deque<int> sortedDeque;
+	sortedDeque.push_back(sortedPairs[0]._second);
+	sortedDeque.push_back(sortedPairs[0]._first);
+	for (std::deque<Pair>::iterator it = sortedPairs.begin() + 1; it != sortedPairs.end(); it++) {
+		// Insert first element of pair at the end of sorted deque
+		sortedDeque.push_back(it->_first);
+
+		// Insert second element at correct index using binary search
+		int right = sortedDeque.size() - 1;
+		int index = binarySearchDeque(sortedDeque, right, it->_second);
+		sortedDeque.insert(sortedDeque.begin() + index, it->_second);
+	}
+
+	// Insert leaved element using binary search
+	if (leavedElement) {
+		int right = sortedDeque.size() - 1;
+		int index = binarySearchDeque(sortedDeque, right, leavedElement);
+		sortedDeque.insert(sortedDeque.begin() + index, leavedElement);
+	}
+
+	_deque = sortedDeque;
 }
 
 // -------------------- VALIDATION -------------------- //

@@ -8,7 +8,7 @@
 # include <algorithm>
 # include <sstream>
 
-#define DEBUG 1
+#define DEBUG 0
 
 class PmergeMe
 {
@@ -21,6 +21,10 @@ class PmergeMe
 		void	createVector(char **argv);
 		void	printVector(const std::string& title) const;
 		void	sortVector();
+
+		void	createDeque(char **argv);
+		void	printDeque(const std::string& title) const;
+		void	sortDeque();
 
 		static bool	isValid(char **argv, bool checkDuplicate);
 	private:

@@ -25,7 +25,17 @@ int main(int argc, char **argv) {
 	const double elapsedTimeVector = double(clock() - beginTimeVector) / CLOCKS_PER_SEC;
 	pmergeMeVector.printVector("After[vector]");
 
+	// Deck
+	PmergeMe pmergeMeDeque;
+	pmergeMeDeque.createDeque(argv);
+	pmergeMeDeque.printDeque("Before[deque]");
+	const clock_t beginTimeDeque = clock();
+	pmergeMeDeque.sortDeque();
+	const double elapsedTimeDeque = double(clock() - beginTimeDeque) / CLOCKS_PER_SEC;
+	pmergeMeDeque.printDeque("After[deque]");
+
 	printTime(argc - 1, elapsedTimeVector, "vector");
+	printTime(argc - 1, elapsedTimeDeque, "deque");
 
 	return 0;
 }
