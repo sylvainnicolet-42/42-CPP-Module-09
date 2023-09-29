@@ -1,11 +1,5 @@
 #include "PmergeMe.hpp"
 
-/* PROTYPES */
-static std::list<int> merge(std::list<int> A, std::list<int> B);
-static std::vector<int> merge(std::vector<int> A, std::vector<int> B);
-static std::list<int> fordJohnson(std::list<int> arr);
-static std::vector<int> fordJohnson(std::vector<int> arr);
-
 PmergeMe::PmergeMe() {}
 
 PmergeMe::~PmergeMe() {}
@@ -17,26 +11,16 @@ PmergeMe::PmergeMe(PmergeMe const &src) {
 PmergeMe &PmergeMe::operator=(PmergeMe const &rhs) {
 	if (this != &rhs) {
 		_vector = rhs._vector;
-		_list = rhs._list;
+		_deque = rhs._deque;
 	}
 	return *this;
 }
 
-void	PmergeMe::createList(char **argv) {
-	for (int i = 1; argv[i]; i++)
-		_list.push_back(atoi(argv[i]));
-}
+// -------------------- VECTOR -------------------- //
 
 void	PmergeMe::createVector(char **argv) {
 	for (int i = 1; argv[i]; i++)
 		_vector.push_back(atoi(argv[i]));
-}
-
-void PmergeMe::printList(const std::string& title) const {
-	std::cout << title << ": ";
-	for (std::list<int>::const_iterator it = _list.begin(); it != _list.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
 }
 
 void PmergeMe::printVector(const std::string& title) const {
@@ -46,131 +30,136 @@ void PmergeMe::printVector(const std::string& title) const {
 	std::cout << std::endl;
 }
 
-void	PmergeMe::sortList() {
-	_list = fordJohnson(_list);
+static int binarySearch(std::vector<int> vector, int right, int element) {
+	int left = 0;
+	int middle;
+
+	while (left <= right) {
+		middle = (left + right) / 2;
+		if (element < vector[middle])
+			right = middle - 1;
+		else if (element > vector[middle])
+			left = middle + 1;
+		else
+			return middle;
+	}
+	return left;
 }
 
+/**
+ * Merge-insertion sort performs the following steps, on an input X of n elements:
+ * 1. Group the elements of X into [n/2] pairs of elements, arbitrarily, leaving one element unpaired if there is an odd number of elements.
+ * 2. Perform [n/2] comparisons, one per pair, to determine the larger of the two elements in each pair.
+ * 3. Recursively sort the [n/2] larger elements from each pair, creating a sorted sequence S of [n/2] of the input elements, in ascending order.
+ * 4. Insert at the start of S the element that was paired with the first and smallest element of S.
+ * 5. Insert the remaining [n/2] - 1 elements of X \ S into S, one at a time.
+ *    Use binary search in subsequences of to determine the position at which each element should be inserted.
+ */
 void	PmergeMe::sortVector() {
-	_vector = fordJohnson(_vector);
-}
 
-/* UTILS FUNCTIONS */
+	// 1. Group the elements of X into [n/2] pairs of elements, arbitrarily, leaving one element unpaired if there is an odd number of elements.
+	if (DEBUG)
+		std::cout << std::endl << "=== 1. Group elements into pairs ===" << std::endl;
+	std::vector<Pair> pairs;
+	int leavedElement = 0;
+	for (std::vector<int>::iterator it = _vector.begin(); it != _vector.end(); it += 2) {
+		if (it + 1 == _vector.end()) {
+			leavedElement = *it;
+			break;
+		}
+		pairs.push_back(Pair(*it, *(it + 1)));
+	}
 
-static std::list<int> merge(std::list<int> A, std::list<int> B) {
-
-	// Crée une liste vide pour stocker la fusion des sous-tableaux
-	std::list<int> merged;
-
-	// Initialise deux itérateurs pour parcourir les listes A et B respectivement
-	std::list<int>::iterator itA = A.begin();
-	std::list<int>::iterator itB = B.begin();
-
-	// Parcours les deux sous-tableaux A et B
-	while (itA != A.end() && itB != B.end()) {
-		if (*itA < *itB) {
-			merged.push_back(*itA);
-			itA++;
-		} else {
-			merged.push_back(*itB);
-			itB++;
+	// Display pairs
+	if (DEBUG) {
+		for (std::vector<Pair>::iterator it = pairs.begin(); it != pairs.end(); it++) {
+			std::cout << "Pair: [" << it->_first << ", " << it->_second << "]" << std::endl;
 		}
 	}
 
-	// Ajoute les éléments restants de A et B
-	while (itA != A.end()) {
-		merged.push_back(*itA);
-		itA++;
-	}
-	while (itB != B.end()) {
-		merged.push_back(*itB);
-		itB++;
+	// 2. Perform [n/2] comparisons, one per pair, to determine the larger of the two elements in each pair.
+	if (DEBUG)
+		std::cout << std::endl << "=== 2. Sort pairs by largest element ===" << std::endl;
+	for (std::vector<Pair>::iterator it = pairs.begin(); it != pairs.end(); it++) {
+		if (it->_first < it->_second)
+			std::swap(it->_first, it->_second);
 	}
 
-	return merged;
-}
-
-static std::vector<int> merge(std::vector<int> A, std::vector<int> B) {
-
-	std::cout << "merge" << std::endl;
-
-	// Crée un vecteur vide pour stocker la fusion des sous-tableaux
-	std::vector<int> merged;
-
-	// Initialise deux indices i et j pour parcourir les tableaux A et B respectivement
-	size_t i = 0, j = 0;
-
-	// Parcours les deux sous-tableaux A et B
-	while (i < A.size() && j < B.size()) {
-		if (A[i] < B[j]) {
-			merged.push_back(A[i]);
-			i++;
-		} else {
-			merged.push_back(B[j]);
-			j++;
+	// Display pairs
+	if (DEBUG) {
+		for (std::vector<Pair>::iterator it = pairs.begin(); it != pairs.end(); it++) {
+			std::cout << "Pair: [" << it->_first << ", " << it->_second << "]" << std::endl;
 		}
 	}
 
-	// Ajoute les éléments restants de A et B
-	while (i < A.size()) {
-		merged.push_back(A[i]);
-		i++;
-	}
-	while (j < B.size()) {
-		merged.push_back(B[j]);
-		j++;
+	// 3. Sort pairs by first element keeping pairs together
+	if (DEBUG)
+		std::cout << std::endl << "=== 3. Sort pairs by first element keeping pairs together ===" << std::endl;
+	std::vector<Pair> sortedPairs;
+	for (std::vector<Pair>::iterator it = pairs.begin(); it != pairs.end(); it++) {
+		if (sortedPairs.empty()) {
+			sortedPairs.push_back(*it);
+			continue;
+		}
+		for (std::vector<Pair>::iterator it2 = sortedPairs.begin(); it2 != sortedPairs.end(); it2++) {
+			if (it->_first < it2->_first) {
+				sortedPairs.insert(it2, *it);
+				break;
+			}
+			if (it2 + 1 == sortedPairs.end()) {
+				sortedPairs.push_back(*it);
+				break;
+			}
+		}
 	}
 
-	return merged;
+	// Display pairs
+	if (DEBUG) {
+		for (std::vector<Pair>::iterator it = sortedPairs.begin(); it != sortedPairs.end(); it++) {
+			std::cout << "Pair: [" << it->_first << ", " << it->_second << "]" << std::endl;
+		}
+	}
+
+	// 4. Insert elements into sorted vector using binary search
+	if (DEBUG)
+		std::cout << std::endl << "=== 4. Insert elements into sorted vector using binary search ===" << std::endl;
+
+	// Insert first pair
+	std::vector<int> sortedVector;
+	sortedVector.push_back(sortedPairs[0]._second);
+	sortedVector.push_back(sortedPairs[0]._first);
+
+	// Insert remaining elements
+	for (std::vector<Pair>::iterator it = sortedPairs.begin() + 1; it != sortedPairs.end(); it++) {
+		// Insert first element of pair at the end of sorted vector
+		sortedVector.push_back(it->_first);
+
+		// Insert second element at correct index using binary search
+		int right = sortedVector.size() - 1;
+		int index = binarySearch(sortedVector, right, it->_second);
+		sortedVector.insert(sortedVector.begin() + index, it->_second);
+	}
+
+	// Insert leaved element using binary search
+	if (leavedElement) {
+		int right = sortedVector.size() - 1;
+		int index = binarySearch(sortedVector, right, leavedElement);
+		sortedVector.insert(sortedVector.begin() + index, leavedElement);
+	}
+
+	// Display sorted vector
+	if (DEBUG) {
+		std::cout << std::endl << "=== 5. Sorted vector ===" << std::endl;
+		for (std::vector<int>::iterator it = sortedVector.begin(); it != sortedVector.end(); it++) {
+			std::cout << *it << " ";
+		}
+		std::cout << std::endl;
+	}
+
+	_vector = sortedVector;
 }
 
-std::list<int>	fordJohnson(std::list<int> arr) {
-	if (arr.size() <= 1) {
-		return arr;
-	}
-
-	// Divisez le tableau en deux sous-tableaux
-	size_t middle = arr.size() / 2;
-	std::list<int> left;
-	std::list<int> right;
-	std::list<int>::iterator it = arr.begin();
-	for (size_t i = 0; i < middle; i++) {
-		left.push_back(*it);
-		it++;
-	}
-	for (size_t i = middle; i < arr.size(); i++) {
-		right.push_back(*it);
-		it++;
-	}
-
-	// Triez récursivement les sous-tableaux
-	left = fordJohnson(left);
-	right = fordJohnson(right);
-
-	// Fusionnez les sous-tableaux triés
-	return merge(left, right);
-}
-
-std::vector<int> fordJohnson(std::vector<int> arr) {
-
-	// Condition d'arrêt
-	if (arr.size() <= 1) {
-		return arr;
-	}
-
-	// Divisez le tableau en deux sous-tableaux
-	int middle = arr.size() / 2;
-	std::vector<int> left(arr.begin(), arr.begin() + middle);
-	std::vector<int> right(arr.begin() + middle + 1, arr.end());
-
-	// Triez récursivement les sous-tableaux
-	left = fordJohnson(left);
-	right = fordJohnson(right);
-
-	// Fusionnez les sous-tableaux triés
-	return merge(left, right);
-}
-
-/* STATIC FUNCTIONS */
+// -------------------- VALIDATION -------------------- //
 
 bool PmergeMe::isValid(char **argv, bool checkDuplicate) {
 	for (int i = 1; argv[i]; i++) {
